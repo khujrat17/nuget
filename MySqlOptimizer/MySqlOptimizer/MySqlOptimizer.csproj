@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net7.0;net472;net452</TargetFrameworks>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<OutputType>Library</OutputType>
+		<PackageId>MySqlOptimizer</PackageId>
+		<Version>1.4.0</Version>
+		<Authors>Shaikh Khujrat</Authors>
+		<Company>FreeLance</Company>
+		<Description>MySqlOptimizer is a C# library designed to simplify database operations with MySQL.</Description>
+		<PackageTags>MySql, Database, DataAccess, ORM, SQL, C#, .NET, CRUD, Parameterization, SQLInjectionPrevention</PackageTags>
+		<RequireLicenseAcceptance>false</RequireLicenseAcceptance>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Deterministic>true</Deterministic>
+		<PackageReadme>README.md</PackageReadme>
+		<LangVersion>10.0</LangVersion>
+		<!-- Specify C# 10.0 -->
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="MySql.Data" Version="8.0.11" Condition="'$(TargetFramework)' == 'net7.0' or '$(TargetFramework)' == 'net472'" />
+		<PackageReference Include="MySql.Data" Version="6.10.9" Condition="'$(TargetFramework)' == 'net452'" />
+	</ItemGroup>
+
+</Project>

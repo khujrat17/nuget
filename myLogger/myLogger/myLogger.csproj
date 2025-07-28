@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	  <OutputType>Library</OutputType>
+	  <PackageId>CustomLog</PackageId>
+	  <Version>1.1.0</Version>
+	  <Authors>Shaikh Khujrat</Authors>
+	  <Company>Test</Company>
+	  <Description>A simple logging library for writing log messages to a file..</Description>
+	  <PackageTags>Log; Logging; Log File; Log message</PackageTags>
+	  <RequireLicenseAcceptance>false</RequireLicenseAcceptance>
+	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
+	  <Deterministic>true</Deterministic>
+	  <PackageReadme>README.md</PackageReadme>
+  </PropertyGroup>
+  <ItemGroup>
+	
+  </ItemGroup>
+</Project>

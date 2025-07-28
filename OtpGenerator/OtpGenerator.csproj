@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net9.0;netstandard2.0;net45;net461;net47;net48</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>10.0</LangVersion>
+	  <PackageId>myOtpGenerator</PackageId>
+	  <Version>3.1</Version>
+	  <Authors>Shaikh Khujrat</Authors>
+    <Company>MIT</Company>
+    <Description>Simple and secure OTP generation library supporting multiple .NET versions</Description>
+    <PackageTags>OTP generator security authentication 2FA</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/yourusername/OtpGenerator</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/yourusername/OtpGenerator.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>Initial release of the OTP Generator library</PackageReleaseNotes>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+</Project>

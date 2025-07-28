@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	  <OutputType>Library</OutputType>
+	  <PackageId>MyLogicalLibrary</PackageId>
+	  <Version>1.0.0</Version>
+	  <Authors>Shaikh Khujrat</Authors>
+	  <Company>FreeLance</Company>
+	  <Description> MyLogicalLibrary is a C# library that provides various mathematical and string operations. It includes functionalities for basic arithmetic, prime checking, Fibonacci sequence generation, factorial calculation, and string manipulation tasks such as reversing strings and checking for palindromes.
+	  </Description>
+	  <PackageTags>Math, String, Operations,Logical C#, .NET</PackageTags>
+	  <RequireLicenseAcceptance>false</RequireLicenseAcceptance>
+	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
+	  <Deterministic>true</Deterministic>
+	  <PackageReadme>README.md</PackageReadme>
+  </PropertyGroup>
+
+</Project>
