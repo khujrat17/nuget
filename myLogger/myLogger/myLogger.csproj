@@ -1,22 +1,36 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-	  <OutputType>Library</OutputType>
-	  <PackageId>CustomLog</PackageId>
-	  <Version>1.1.0</Version>
-	  <Authors>Shaikh Khujrat</Authors>
-	  <Company>Test</Company>
-	  <Description>A simple logging library for writing log messages to a file..</Description>
-	  <PackageTags>Log; Logging; Log File; Log message</PackageTags>
-	  <RequireLicenseAcceptance>false</RequireLicenseAcceptance>
-	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
-	  <Deterministic>true</Deterministic>
-	  <PackageReadme>README.md</PackageReadme>
-  </PropertyGroup>
-  <ItemGroup>
-	
-  </ItemGroup>
+	<PropertyGroup>
+		<!-- Multi-targeting: .NET Framework 4.5+, .NET 6/7 -->
+		<TargetFrameworks>net45;net452;net48;net6.0;net7.0</TargetFrameworks>
+
+		<Nullable>enable</Nullable>
+		<OutputType>Library</OutputType>
+
+		<!-- NuGet metadata -->
+		<PackageId>CustomLog</PackageId>
+		<Version>2.0.0</Version>
+		<Authors>Shaikh Khujrat</Authors>
+		<Company>FreeLance</Company>
+		<Description>CustomLog: Logging library compatible with all .NET Framework 4.0+ and .NET 6/7. Supports log levels, rolling logs, retention, thread-safe logging, and exception logging. Fully backward-compatible with version 1.0.</Description>
+		<PackageTags>Log; Logging; Log File; Log message; Thread-safe; Rolling logs; Retention; Exception</PackageTags>
+		<RequireLicenseAcceptance>false</RequireLicenseAcceptance>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Deterministic>true</Deterministic>
+
+		<!-- Correct property for README -->
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+
+		<!-- Only enable ImplicitUsings for modern .NET -->
+		<ImplicitUsings Condition="'$(TargetFramework)' == 'net6.0' Or '$(TargetFramework)' == 'net7.0'">enable</ImplicitUsings>
+
+		<!-- Ensure old frameworks use a compatible C# version -->
+		<LangVersion Condition="'$(TargetFramework)' == 'net45' Or '$(TargetFramework)' == 'net452' Or '$(TargetFramework)' == 'net48'">8.0</LangVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- Include README in the package root -->
+		<None Include="README.md" Pack="true" PackagePath="" />
+	</ItemGroup>
+
 </Project>

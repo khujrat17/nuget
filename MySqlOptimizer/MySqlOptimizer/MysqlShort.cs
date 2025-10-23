@@ -1,8 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 using System.Data;
 
-
-
 namespace MySqlOptimizer
 {
     public class MysqlShort

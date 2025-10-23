@@ -1,53 +1,124 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace myLogger
 {
+    public enum LogLevel
+    {
+        Info,
+        Warning,
+        Error
+    }
+
     public class SLogger
     {
-        private readonly string _logFilePath;
+        private readonly string _logDirectory;
+        private readonly string _logFileName;
+        private readonly object _lockObj = new object();
+        private readonly int _retentionDays;
 
-        public SLogger(string logFilePath)
+        public SLogger(string logDirectory, string logFileName = "log.txt", int retentionDays = 30)
         {
-            _logFilePath = logFilePath;
+            _logDirectory = logDirectory;
+            _logFileName = logFileName;
+            _retentionDays = retentionDays;
 
+            if (!Directory.Exists(_logDirectory))
+                Directory.CreateDirectory(_logDirectory);
+
+            CleanupOldLogs();
         }
 
-        // Method to ensure the log file exists
-        public void EnsureLogFileExists(string logFilePath)
+        /// <summary>
+        /// Logs a message with optional log level and console output.
+        /// </summary>
+        public void Log(string message, LogLevel level = LogLevel.Info, bool writeToConsole = false)
         {
-            if (!File.Exists(logFilePath))
+            WriteLog(message, level, writeToConsole);
+        }
+
+        /// <summary>
+        /// Logs an exception with full details.
+        /// </summary>
+        public void LogException(Exception ex, LogLevel level = LogLevel.Error, bool writeToConsole = true)
+        {
+            if (ex == null) return;
+
+            var sb = new StringBuilder();
+            sb.AppendLine("Exception Occurred:");
+            sb.AppendLine($"Message: {ex.Message}");
+            sb.AppendLine($"StackTrace: {ex.StackTrace}");
+
+            // Include inner exceptions if any
+            Exception inner = ex.InnerException;
+            while (inner != null)
             {
-                // Create the file and close it immediately
-                using (File.Create(logFilePath)) { }
+                sb.AppendLine("Inner Exception:");
+                sb.AppendLine($"Message: {inner.Message}");
+                sb.AppendLine($"StackTrace: {inner.StackTrace}");
+                inner = inner.InnerException;
+            }
+
+            WriteLog(sb.ToString(), level, writeToConsole);
+        }
+
+        #region Backward-Compatible 1.0 Methods
+        public void LogInfo(string message) => Log(message, LogLevel.Info);
+        public void LogWarning(string message) => Log(message, LogLevel.Warning);
+        public void LogError(string message) => Log(message, LogLevel.Error);
+        #endregion
+
+        /// <summary>
+        /// Clears all logs in the directory.
+        /// </summary>
+        public void ClearLogs()
+        {
+            lock (_lockObj)
+            {
+                foreach (var file in Directory.GetFiles(_logDirectory, $"*_{_logFileName}"))
+                {
+                    File.Delete(file);
+                }
             }
         }
 
-        public void Log(string message)
+        /// <summary>
+        /// Deletes old logs beyond retention period.
+        /// </summary>
+        private void CleanupOldLogs()
         {
-            // Prepare the log message
-            var logMessage = $"{DateTime.Now}: {message}";
-
-            // Append the log message to the file
-            File.AppendAllText(_logFilePath, logMessage + Environment.NewLine);
+            lock (_lockObj)
+            {
+                var files = Directory.GetFiles(_logDirectory, $"*_{_logFileName}");
+                foreach (var file in files)
+                {
+                    try
+                    {
+                        var creationTime = File.GetCreationTime(file);
+                        if ((DateTime.Now - creationTime).TotalDays > _retentionDays)
+                            File.Delete(file);
+                    }
+                    catch { /* Ignore deletion errors */ }
+                }
+            }
         }
 
-        public void LogError(string message)
+        /// <summary>
+        /// Internal helper to write log messages to file and optionally console.
+        /// </summary>
+        private void WriteLog(string message, LogLevel level, bool writeToConsole)
         {
-            Log($"ERROR: {message}");
-        }
+            string datedFile = Path.Combine(_logDirectory, $"{DateTime.Now:yyyy-MM-dd}_{_logFileName}");
+            string logMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} [{level}] {message}";
 
-        public void LogInfo(string message)
-        {
-            Log($"INFO: {message}");
-        }
+            lock (_lockObj)
+            {
+                File.AppendAllText(datedFile, logMessage + Environment.NewLine);
+            }
 
-        public void LogWarning(string message)
-        {
-            Log($"WARNING: {message}");
+            if (writeToConsole)
+                Console.WriteLine(logMessage);
         }
     }
 }
