@@ -5,22 +5,35 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<OutputType>Library</OutputType>
 		<PackageId>MySqlOptimizer</PackageId>
-		<Version>1.4.0</Version>
+		<Version>2.0.0</Version>
 		<Authors>Shaikh Khujrat</Authors>
 		<Company>FreeLance</Company>
-		<Description>MySqlOptimizer is a C# library designed to simplify database operations with MySQL.</Description>
-		<PackageTags>MySql, Database, DataAccess, ORM, SQL, C#, .NET, CRUD, Parameterization, SQLInjectionPrevention</PackageTags>
+		<Description>MySqlOptimizer v2.0.0 is a C# library designed to simplify MySQL database operations with advanced features like async support, transactions, bulk insert, and stored procedure output handling.</Description>
+		<PackageTags>MySql, Database, DataAccess, ORM, SQL, C#, .NET, CRUD, Async, BulkInsert, Transaction, SQLInjectionPrevention, StoredProcedures, MySQLConnector, ADO.NET, DataTable, ParameterizedQueries, DataAccessLibrary, Enterprise, Productivity, Backend, QueryLogging, EFAlternative, HighPerformance, MicroserviceReady</PackageTags>
 		<RequireLicenseAcceptance>false</RequireLicenseAcceptance>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<Deterministic>true</Deterministic>
-		<PackageReadme>README.md</PackageReadme>
+		<!-- Correct property for README -->
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+
+		<!-- New fields for NuGet metadata -->
+		<PackageReleaseNotes>
+			Added async methods, transaction support, bulk insert, stored procedure output parameters, and query logging. Fully backward compatible with v1.x.
+		</PackageReleaseNotes>
+		<ProjectUrl>https://github.com/YourUsername/MySqlOptimizer</ProjectUrl>
+		<RepositoryType>git</RepositoryType>
+		<RepositoryUrl>https://github.com/khujrat17/nuget.git</RepositoryUrl>
+
 		<LangVersion>10.0</LangVersion>
-		<!-- Specify C# 10.0 -->
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="MySql.Data" Version="8.0.11" Condition="'$(TargetFramework)' == 'net7.0' or '$(TargetFramework)' == 'net472'" />
 		<PackageReference Include="MySql.Data" Version="6.10.9" Condition="'$(TargetFramework)' == 'net452'" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- Include README in the package root -->
+		<None Include="README.md" Pack="true" PackagePath="" />
 	</ItemGroup>
 
 </Project>
