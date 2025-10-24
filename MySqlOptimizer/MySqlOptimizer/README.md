@@ -12,6 +12,7 @@ Execute Insert	Insert new records using raw SQL or parameterized queries.
 Execute Update	Update existing records using raw SQL or parameterized queries.
 Execute Delete	Delete records using raw SQL or parameterized queries.
 Execute Stored Procedure (input only)	Call stored procedures with input parameters.
+
 Check Connection	Validate the database connection.
 ExecuteScalar & ExecuteReaderWithParameters	Retrieve single values or read result sets.
 New Features in v2.0.0

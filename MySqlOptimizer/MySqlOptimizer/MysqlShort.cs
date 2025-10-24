@@ -176,6 +176,29 @@ namespace MySqlOptimizer
         #endregion
 
         #region STORED PROCEDURE WITH OUTPUT
+        public bool ExecuteStoredProcedure(string connectionString, string storedProcedureName, Dictionary<string, object> parameters)
+        {
+            try
+            {
+                using MySqlConnection mySqlConnection = new MySqlConnection(connectionString);
+                using MySqlCommand mySqlCommand = new MySqlCommand(storedProcedureName, mySqlConnection);
+                mySqlCommand.CommandType = CommandType.StoredProcedure;
+                if (parameters != null)
+                {
+                    foreach (KeyValuePair<string, object> parameter in parameters)
+                    {
+                        mySqlCommand.Parameters.AddWithValue(parameter.Key, parameter.Value);
+                    }
+                }
+
+                mySqlConnection.Open();
+                return mySqlCommand.ExecuteNonQuery() > 0;
+            }
+            catch (Exception innerException)
+            {
+                throw new Exception("An error occurred while executing the stored procedure.", innerException);
+            }
+        }
 
         public Dictionary<string, object> ExecuteStoredProcedureWithOutput(
             string connectionString,

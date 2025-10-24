@@ -5,7 +5,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<OutputType>Library</OutputType>
 		<PackageId>MySqlOptimizer</PackageId>
-		<Version>2.0.0</Version>
+		<Version>2.1.0</Version>
 		<Authors>Shaikh Khujrat</Authors>
 		<Company>FreeLance</Company>
 		<Description>MySqlOptimizer v2.0.0 is a C# library designed to simplify MySQL database operations with advanced features like async support, transactions, bulk insert, and stored procedure output handling.</Description>
@@ -17,7 +17,7 @@
 
 		<!-- New fields for NuGet metadata -->
 		<PackageReleaseNotes>
-			Added async methods, transaction support, bulk insert, stored procedure output parameters, and query logging. Fully backward compatible with v1.x.
+			Added ExecuteStoredProcedure with returning the bool value.
 		</PackageReleaseNotes>
 		<ProjectUrl>https://github.com/YourUsername/MySqlOptimizer</ProjectUrl>
 		<RepositoryType>git</RepositoryType>
