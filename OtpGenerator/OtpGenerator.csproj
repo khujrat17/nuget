@@ -1,22 +1,32 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFrameworks>net9.0;netstandard2.0;net45;net461;net47;net48</TargetFrameworks>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <LangVersion>10.0</LangVersion>
-	  <PackageId>myOtpGenerator</PackageId>
-	  <Version>3.1</Version>
-	  <Authors>Shaikh Khujrat</Authors>
-    <Company>MIT</Company>
-    <Description>Simple and secure OTP generation library supporting multiple .NET versions</Description>
-    <PackageTags>OTP generator security authentication 2FA</PackageTags>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/yourusername/OtpGenerator</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/yourusername/OtpGenerator.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>Initial release of the OTP Generator library</PackageReleaseNotes>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net9.0;netstandard2.0;net45;net461;net47;net48</TargetFrameworks>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<LangVersion>10.0</LangVersion>
+		<PackageId>myOtpGenerator</PackageId>
+		<Version>4.0.0</Version>
+		<Authors>Shaikh Khujrat</Authors>
+		<Company>MIT</Company>
+		<Description>Advanced and secure OTP generation library supporting multiple .NET versions, with expiration, alphanumeric support, and retry limits.</Description>
+		<PackageTags>OTP;generator;security;authentication;2FA;MFA;one-time-password;random;hashing;cryptography;verification;mobile;web;API;token;secure;numeric;alphanumeric;expiry;expiring;retry-limit;validation;hash;SHA256;timestamp;unique;prefix;suffix;multi-framework;netstandard;netcore;netframework;desktop;server;backend;CSharp;dotnet;dotnetlibrary;library;package;NuGet;open-source;MIT;authenticator;login;user-verification;developer-tool;security-tool;otp-generator;advanced-OTP</PackageTags>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageProjectUrl>https://github.com/khujrat17/nuget</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/khujrat17/nuget.git</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageReleaseNotes>v4.0: Added OTP expiration, alphanumeric OTP, retry limit, no-repeat OTP, and advanced security features while keeping all v3.1 features intact.</PackageReleaseNotes>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+
+	</PropertyGroup>
+
+
+	<ItemGroup>
+		<!-- Include README in the package root -->
+		<None Include="README.md" Pack="true" PackagePath="" />
+	</ItemGroup>
+
 </Project>

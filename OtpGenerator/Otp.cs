@@ -1,15 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+
 namespace OtpGenerator
 {
-    
-
     public class Otp
     {
         private static readonly RandomNumberGenerator rng = RandomNumberGenerator.Create();
+        private static readonly char[] AlphanumericChars =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".ToCharArray();
 
-        // Method to generate a random OTP of specified length
+        // Keep track of recent OTPs to prevent immediate reuse
+        private static readonly HashSet<string> RecentOtps = new();
+
+        #region Basic OTP Generation (v3.1)
+
+        // Generate numeric OTP
         public string GenerateOtp(int length = 6)
         {
             ValidateLength(length);
@@ -19,40 +26,20 @@ namespace OtpGenerator
             for (int i = 0; i < length; i++)
             {
                 rng.GetBytes(randomNumber);
-                otpBuilder.Append(randomNumber[0] % 10); // Generates a digit from 0 to 9
+                otpBuilder.Append(randomNumber[0] % 10);
             }
 
             return otpBuilder.ToString();
         }
 
-        // Method to validate the length of the OTP
-        private void ValidateLength(int length)
-        {
-            if (length <= 0)
-            {
-                throw new ArgumentException("Length must be greater than 0");
-            }
-
-            if (length > 10) // Assuming a maximum length of 10 for OTP
-            {
-                throw new ArgumentException("Length must not exceed 10");
-            }
-        }
-
-        // Method to generate a unique OTP (for example, by appending a timestamp)
+        // Generate unique OTP with timestamp
         public string GenerateUniqueOtp(int length = 6)
         {
             string otp = GenerateOtp(length);
-            return $"{otp}-{DateTime.UtcNow.Ticks}"; // Example of making it unique
+            return $"{otp}-{DateTime.UtcNow.Ticks}";
         }
 
-        // Method to validate if the provided OTP matches the generated OTP
-        public bool ValidateOtp(string generatedOtp, string userInput)
-        {
-            return generatedOtp.Equals(userInput);
-        }
-
-        // Method to generate a list of OTPs for testing or other purposes
+        // Generate multiple OTPs
         public string[] GenerateMultipleOtps(int count, int length = 6)
         {
             string[] otps = new string[count];
@@ -63,35 +50,139 @@ namespace OtpGenerator
             return otps;
         }
 
-        // Method to generate an OTP with a specific prefix
+        // OTP with prefix
         public string GenerateOtpWithPrefix(string prefix, int length = 6)
         {
             string otp = GenerateOtp(length);
             return $"{prefix}-{otp}";
         }
 
-        // Method to generate an OTP with a specific suffix
+        // OTP with suffix
         public string GenerateOtpWithSuffix(string suffix, int length = 6)
         {
             string otp = GenerateOtp(length);
             return $"{otp}-{suffix}";
         }
 
-
-
-        // Method to generate a hash of the OTP (for secure storage)
+        // Hash OTP for secure storage
         public string HashOtp(string otp)
         {
             using (var sha256 = SHA256.Create())
             {
                 byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(otp));
-                StringBuilder builder = new StringBuilder();
+                var builder = new StringBuilder();
                 foreach (var b in bytes)
-                {
                     builder.Append(b.ToString("x2"));
-                }
                 return builder.ToString();
             }
         }
+
+        // Validate OTP
+        public bool ValidateOtp(string generatedOtp, string userInput)
+        {
+            return generatedOtp.Equals(userInput);
+        }
+
+        #endregion
+
+        #region Advanced v4.0 Features
+
+        // Generate OTP with expiration
+        public ExpiringOtp GenerateOtpWithExpiry(int length = 6, int expireMinutes = 5)
+        {
+            string code = GenerateOtp(length);
+            return new ExpiringOtp
+            {
+                Code = code,
+                Expiry = DateTime.UtcNow.AddMinutes(expireMinutes)
+            };
+        }
+
+        // Generate alphanumeric OTP
+        public string GenerateAlphanumericOtp(int length = 6)
+        {
+            ValidateLength(length);
+            var otpBuilder = new StringBuilder(length);
+            byte[] randomNumber = new byte[1];
+
+            for (int i = 0; i < length; i++)
+            {
+                rng.GetBytes(randomNumber);
+                otpBuilder.Append(AlphanumericChars[randomNumber[0] % AlphanumericChars.Length]);
+            }
+
+            return otpBuilder.ToString();
+        }
+
+        // Generate unique OTP with no repeats
+        public string GenerateUniqueOtpNoRepeat(int length = 6)
+        {
+            string otp;
+            do
+            {
+                otp = GenerateOtp(length);
+            } while (RecentOtps.Contains(otp));
+
+            RecentOtps.Add(otp);
+            return otp;
+        }
+
+        // OTP validator with retry limit
+        public OtpValidator GetValidator(string otp, int maxAttempts = 3)
+        {
+            return new OtpValidator(otp, maxAttempts);
+        }
+
+        #endregion
+
+        #region Helpers
+
+        private void ValidateLength(int length)
+        {
+            if (length <= 0)
+                throw new ArgumentException("Length must be greater than 0");
+
+            if (length > 10) // max 10 digits
+                throw new ArgumentException("Length must not exceed 10");
+        }
+
+        #endregion
     }
+
+    #region Supporting Classes
+
+    // OTP with expiration
+    public class ExpiringOtp
+    {
+        public string Code { get; set; }
+        public DateTime Expiry { get; set; }
+
+        public bool IsExpired() => DateTime.UtcNow > Expiry;
+    }
+
+    // Validator with retry limit
+    public class OtpValidator
+    {
+        private readonly string _otp;
+        private int _attempts;
+        private readonly int _maxAttempts;
+
+        public OtpValidator(string otp, int maxAttempts = 3)
+        {
+            _otp = otp;
+            _maxAttempts = maxAttempts;
+            _attempts = 0;
+        }
+
+        public bool Validate(string input)
+        {
+            if (_attempts >= _maxAttempts) return false;
+            _attempts++;
+            return _otp == input;
+        }
+
+        public int AttemptsLeft => _maxAttempts - _attempts;
+    }
+
+    #endregion
 }
