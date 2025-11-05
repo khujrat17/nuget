@@ -1,59 +1,73 @@
-﻿MySqlOptimizer
+﻿# MySqlOptimizer
 
-MySqlOptimizer is a C# library designed to simplify database operations with MySQL. It provides methods for executing SELECT, INSERT, UPDATE, DELETE, and stored procedures using both raw SQL and parameterized queries to prevent SQL injection attacks.
+**MySqlOptimizer** is a C# library designed to simplify MySQL database operations. It provides methods for executing `SELECT`, `INSERT`, `UPDATE`, `DELETE`, and stored procedures using both raw SQL and parameterized queries to prevent SQL injection attacks.
 
-Version 2.0.0 introduces async support, transactions, bulk insert, stored procedure output parameters, and optional query logging while maintaining full backward compatibility with v1.x.
+Version **2.0.0** introduces async support, transactions, bulk insert, stored procedure output parameters, and optional query logging while maintaining full backward compatibility with v1.x.
 
-Features
-Existing Features (v1.x)
-Feature	Description
-Execute Select	Retrieve data into a DataTable.
-Execute Insert	Insert new records using raw SQL or parameterized queries.
-Execute Update	Update existing records using raw SQL or parameterized queries.
-Execute Delete	Delete records using raw SQL or parameterized queries.
-Execute Stored Procedure (input only)	Call stored procedures with input parameters.
+---
 
-Check Connection	Validate the database connection.
-ExecuteScalar & ExecuteReaderWithParameters	Retrieve single values or read result sets.
-New Features in v2.0.0
-Feature	Description
-Async Support	Non-blocking methods: ExecuteSelectAsync, ExecuteNonQueryAsync, ExecuteScalarAsync.
-Transaction Support	Execute multiple queries atomically using ExecuteTransaction.
-Bulk Insert	Insert large datasets efficiently using BulkInsert.
-Stored Procedure Output Parameters	Use ExecuteStoredProcedureWithOutput to retrieve output values.
-Query Logging	Optional logging of SQL queries with QueryLogger delegate.
-Installation
-Prerequisites
+## Features
 
-.NET Framework (4.5.2, 4.7.2) or .NET 7.0
+### Existing Features (v1.x)
 
-MySql.Data NuGet package
+* Execute Select: Retrieve data into a `DataTable`.
+* Execute Insert: Insert new records using raw SQL or parameterized queries.
+* Execute Update: Update existing records using raw SQL or parameterized queries.
+* Execute Delete: Delete records using raw SQL or parameterized queries.
+* Execute Stored Procedure (input only): Call stored procedures with input parameters.
+* Check Connection: Validate the database connection.
+* ExecuteScalar & ExecuteReaderWithParameters: Retrieve single values or read result sets.
 
-Newtonsoft.Json NuGet package (optional, for JSON serialization)
+### New Features in v2.0.0
 
-Install NuGet Packages
+* Async Support: Non-blocking methods (`ExecuteSelectAsync`, `ExecuteNonQueryAsync`, `ExecuteScalarAsync`).
+* Transaction Support: Execute multiple queries atomically using `ExecuteTransaction`.
+* Bulk Insert: Insert large datasets efficiently using `BulkInsert`.
+* Stored Procedure Output Parameters: Retrieve output values with `ExecuteStoredProcedureWithOutput`.
+* Query Logging: Optional logging of SQL queries via `QueryLogger`.
+
+---
+
+## Installation
+
+### Prerequisites
+
+* .NET Framework (4.5.2, 4.7.2) or .NET 7.0
+* [MySql.Data NuGet package](https://www.nuget.org/packages/MySql.Data/)
+* [Newtonsoft.Json NuGet package](https://www.nuget.org/packages/Newtonsoft.Json/) (optional)
+
+### Install Packages
+
+```bash
 Install-Package MySql.Data
 Install-Package Newtonsoft.Json
 Install-Package MySqlOptimizer -Version 2.0.0
+```
 
-Usage
-Create an Instance
+---
+
+## Usage
+
+### Create an Instance
+
+```csharp
 using MySqlOptimizer;
 
-// Create an instance of the MysqlShort class
 MysqlShort mysqlShort = new MysqlShort();
+```
 
-Execute Select
+### Execute Select
+
+```csharp
 string connectionString = "your_connection_string_here";
 string selectQuery = "SELECT * FROM your_table_name";
 
 DataTable result = mysqlShort.ExecuteSelect(connectionString, selectQuery);
+```
 
-Execute Insert (Raw SQL)
-string insertQuery = "INSERT INTO your_table_name (column1, column2) VALUES ('value1', 'value2')";
-int rowsInserted = mysqlShort.ExecuteInsert(connectionString, insertQuery);
+### Execute Insert (Parameterized)
 
-Execute Insert (Parameterized)
+```csharp
 string insertQuery = "INSERT INTO your_table_name (column1, column2) VALUES (@value1, @value2)";
 MySqlParameter[] parameters = new MySqlParameter[]
 {
@@ -62,40 +76,19 @@ MySqlParameter[] parameters = new MySqlParameter[]
 };
 
 int rowsInserted = mysqlShort.ExecuteInsert(connectionString, insertQuery, parameters);
+```
 
-Execute Update (Raw SQL)
-string updateQuery = "UPDATE your_table_name SET column1 = 'new_value' WHERE id = 1";
-int rowsUpdated = mysqlShort.ExecuteUpdate(connectionString, updateQuery);
+### Async Queries (v2.0.0)
 
-Execute Update (Parameterized)
-string updateQuery = "UPDATE your_table_name SET column1 = @newValue WHERE id = @id";
-MySqlParameter[] updateParameters = new MySqlParameter[]
-{
-    new MySqlParameter("@newValue", "new_value"),
-    new MySqlParameter("@id", 1)
-};
-
-int rowsUpdated = mysqlShort.ExecuteUpdate(connectionString, updateQuery, updateParameters);
-
-Execute Delete (Raw SQL)
-string deleteQuery = "DELETE FROM your_table_name WHERE id = 1";
-int rowsDeleted = mysqlShort.ExecuteDelete(connectionString, deleteQuery);
-
-Execute Delete (Parameterized)
-string deleteQuery = "DELETE FROM your_table_name WHERE id = @id";
-MySqlParameter[] deleteParameters = new MySqlParameter[]
-{
-    new MySqlParameter("@id", 1)
-};
-
-int rowsDeleted = mysqlShort.ExecuteDelete(connectionString, deleteQuery, deleteParameters);
-
-Async Queries (v2.0.0)
+```csharp
 DataTable dtAsync = await mysqlShort.ExecuteSelectAsync(connectionString, selectQuery);
 int rowsAffected = await mysqlShort.ExecuteNonQueryAsync(connectionString, insertQuery, parameters);
 object scalarResult = await mysqlShort.ExecuteScalarAsync(connectionString, "SELECT COUNT(*) FROM your_table_name");
+```
 
-Transactions (v2.0.0)
+### Transactions (v2.0.0)
+
+```csharp
 var queries = new List<string>
 {
     "INSERT INTO users(name,email) VALUES('Alice','alice@example.com')",
@@ -103,8 +96,11 @@ var queries = new List<string>
 };
 
 bool success = mysqlShort.ExecuteTransaction(connectionString, queries);
+```
 
-Bulk Insert (v2.0.0)
+### Bulk Insert (v2.0.0)
+
+```csharp
 DataTable dt = new DataTable();
 dt.Columns.Add("name");
 dt.Columns.Add("email");
@@ -113,8 +109,11 @@ dt.Rows.Add("Alice", "alice@example.com");
 dt.Rows.Add("Bob", "bob@example.com");
 
 mysqlShort.BulkInsert(connectionString, "users", dt);
+```
 
-Stored Procedure with Output Parameters (v2.0.0)
+### Stored Procedure with Output Parameters (v2.0.0)
+
+```csharp
 var inputParams = new Dictionary<string, object> { {"@UserId", 1} };
 var outputParams = new List<MySqlParameter>
 {
@@ -123,131 +122,88 @@ var outputParams = new List<MySqlParameter>
 
 var result = mysqlShort.ExecuteStoredProcedureWithOutput(connectionString, "GetUserNameById", inputParams, outputParams);
 Console.WriteLine(result["@UserName"]);
+```
 
-Query Logging (v2.0.0)
+### Query Logging (v2.0.0)
+
+```csharp
 mysqlShort.QueryLogger = query => Console.WriteLine("Executing SQL: " + query);
+```
 
-Comparison: v1.x vs v2.0.0
-Feature	v1.x	v2.0.0
-Execute SELECT/INSERT/UPDATE/DELETE	✅	✅
-Parameterized Queries	✅	✅
-Stored Procedure (input only)	✅	✅
-ExecuteScalar / ExecuteReader	✅	✅
-Async Support	❌	✅
-Transactions	❌	✅
-Bulk Insert	❌	✅
-Stored Procedure Output	❌	✅
-Query Logging	❌	✅
+---
 
-Key Improvements:
+## Comparison: v1.x vs v2.0.0
 
-Async methods allow non-blocking database calls.
+| Feature                             | v1.x | v2.0.0 |
+| ----------------------------------- | ---- | ------ |
+| Execute SELECT/INSERT/UPDATE/DELETE | ✅    | ✅      |
+| Parameterized Queries               | ✅    | ✅      |
+| Stored Procedure (input only)       | ✅    | ✅      |
+| ExecuteScalar / ExecuteReader       | ✅    | ✅      |
+| Async Support                       | ❌    | ✅      |
+| Transactions                        | ❌    | ✅      |
+| Bulk Insert                         | ❌    | ✅      |
+| Stored Procedure Output             | ❌    | ✅      |
+| Query Logging                       | ❌    | ✅      |
 
-Transactions ensure atomic execution of multiple queries.
+---
 
-Bulk insert improves performance for large datasets.
-
-Output parameters in stored procedures simplify data retrieval.
-
-Optional query logging aids debugging and diagnostics.
-
-Error Handling
+## Error Handling
 
 All methods include basic exception handling with descriptive messages. Developers can implement custom error handling as needed.
 
-License
+---
+
+## License
 
 MIT License — see the LICENSE file for details.
 
-Contributing
+---
+
+## Contributing
 
 Contributions are welcome! Submit pull requests or open issues for enhancements or bug fixes.
 
-Contact
+**Contact:**
+Shaikh Khujrat — [khujratshaikh1284@gmail.com](mailto:khujratshaikh1284@gmail.com)
 
-Shaikh Khujrat — khujratshaikh1284@gmail.com
+---
 
-Migration Guide: v2.0.0
-1️⃣ Installation
+## Migration Guide: v2.0.0
+
+1. **Installation**
+
+```bash
 dotnet add package MySqlOptimizer --version 2.0.0
+```
 
+2. **Backward Compatibility**
+   All v1.x code works as-is.
 
-Existing v1.x code will continue to work. New features are optional.
-
-2️⃣ Backward Compatibility
-
-All v1.x methods are intact. Example:
-
+```csharp
 var db = new MysqlShort();
 var dt = db.ExecuteSelect(connectionString, "SELECT * FROM users");
 int rows = db.ExecuteInsert(connectionString, "INSERT INTO users(name,email) VALUES('John','john@example.com')");
+```
 
-3️⃣ New Features
+3. **Adopt New Features (Optional)**
 
-Async Methods
+* Async Methods
+* Transaction Support
+* Bulk Inserts
+* Stored Procedures with Output Parameters
+* Query Logging
 
-DataTable dt = await db.ExecuteSelectAsync(connectionString, "SELECT * FROM users");
+4. **Migration Checklist**
 
+| Task                        | Notes                                               |
+| --------------------------- | --------------------------------------------------- |
+| Upgrade NuGet               | `dotnet add package MySqlOptimizer --version 2.0.0` |
+| Test existing queries       | All v1.x methods are unchanged                      |
+| Optional: adopt async       | Replace blocking calls with async methods           |
+| Optional: enable logging    | Set `QueryLogger`                                   |
+| Optional: use transactions  | Wrap multiple queries with `ExecuteTransaction`     |
+| Optional: bulk inserts      | Use `BulkInsert` for large datasets                 |
+| Optional: output parameters | Use `ExecuteStoredProcedureWithOutput`              |
 
-Transaction Support
-
-var queries = new List<string>
-{
-    "INSERT INTO users(name,email) VALUES('Alice','alice@example.com')",
-    "INSERT INTO users(name,email) VALUES('Bob','bob@example.com')"
-};
-bool success = db.ExecuteTransaction(connectionString, queries);
-
-
-Bulk Insert
-
-DataTable dt = new DataTable();
-dt.Columns.Add("name");
-dt.Columns.Add("email");
-dt.Rows.Add("Alice", "alice@example.com");
-dt.Rows.Add("Bob", "bob@example.com");
-
-db.BulkInsert(connectionString, "users", dt);
-
-
-Stored Procedures with Output Parameters
-
-var inputParams = new Dictionary<string, object> { {"@UserId", 1} };
-var outputParams = new List<MySqlParameter>
-{
-    new MySqlParameter("@UserName", MySqlDbType.VarChar, 100) { Direction = ParameterDirection.Output }
-};
-
-var result = db.ExecuteStoredProcedureWithOutput(connectionString, "GetUserNameById", inputParams, outputParams);
-Console.WriteLine(result["@UserName"]);
-
-
-Query Logging
-
-db.QueryLogger = query => Console.WriteLine("Executing SQL: " + query);
-
-4️⃣ Migration Checklist
-Task	Notes
-Upgrade NuGet	dotnet add package MySqlOptimizer --version 2.0.0
-Test existing queries	All v1.x methods are unchanged
-Optional: adopt async	Replace blocking calls with async methods
-Optional: enable logging	Set QueryLogger
-Optional: use transactions	Wrap multiple queries with ExecuteTransaction
-Optional: bulk inserts	Use BulkInsert for large datasets
-Optional: output parameters	Use ExecuteStoredProcedureWithOutput
-5️⃣ Notes for Users
-
-No breaking changes: v1.x code works as-is.
-
-New features are opt-in.
-
-Async: MySqlDataAdapter is not fully async; consider Dapper if full async needed.
-
-Logging: Optional without changing existing code.
-
-Transactions/Bulk Inserts: Recommended for performance and atomicity.
-
-✅ Conclusion:
-Existing projects using v1.x will continue to work perfectly. New features in v2.0.0 are optional and safe to adopt.
-
-This is fully formatted, clean Markdown, ready for README.md or MigrationGuide.md on NuGet/GitHub.
+✅ **Conclusion:** Existing projects using v1.x will continue to work perfectly. New features in v2.0.0 are optional and safe to adopt.
